@@ -9,11 +9,13 @@
 #define BOTTOM 80
 #define SPACEBAR 32
 
+// 시작시 화면에 띄우기
 void setView() {
 	system("mode con:cols=100 lines=25");
 	system("title test");
 }
 
+//화면에 띄우기
 void view(int arr[8][8], int cursor[2]) {
 	system("cls");
 	for (int i = 0; i < 8; i++) {
@@ -27,162 +29,18 @@ void view(int arr[8][8], int cursor[2]) {
 	}
 }
 
-void reverse() {
-
-}
-
-// 착수 가능 여부
-void option(int arr[8][8], int cursor[], int order) {
-	int turn = order == 1 ? 2 : 1;
-	int x = cursor[0], y = cursor[1];
-	int position[3][3] = { 0 };
-	
-	//오른쪽 위
-	if (x == 0 && y == 7) {
-		position[0][2] = 1;
-		position[0][1] = 1;
-		position[0][0] = 1;
-		position[1][2] = 1;
-		position[2][2] = 1;
-	}
-
-	//왼쪽 위
-	else if (x == 0 && y == 0) {
-		position[2][0] = 1;
-		position[1][0] = 1;
-		position[0][0] = 1;
-		position[0][1] = 1;
-		position[0][2] = 1;
-	}
-
-	//오른쪽 아래
-	else if (x == 7 && y == 7) {
-		position[0][2] = 1;
-		position[1][2] = 1;
-		position[2][2] = 1;
-		position[2][1] = 1;
-		position[2][0] = 1;
-	}
-
-	//왼쪽 아래
-	else if (x == 7 && y == 0) {
-		position[0][0] = 1;
-		position[1][0] = 1;
-		position[2][0] = 1;
-		position[2][1] = 1;
-		position[2][2] = 1;
-	}
-
-	// 위 끝
-	else if (y == 0) {
-		position[0][1] = 1;
-		position[0][0] = 1;
-		position[0][2] = 1;
-	}
-
-	//오른쪽 끝
-	else if (x == 7) {
-		position[0][2] = 1;
-		position[1][2] = 1;
-		position[2][2] = 1;
-	}
-
-	//왼쪽 끝
-	else if (x == 0) {
-		position[0][0] = 1;
-		position[1][0] = 1;
-		position[2][0] = 1;
-	}
-
-	//아래 끝
-	else if (y == 7) {
-		position[2][0] = 1;
-		position[2][1] = 1;
-		position[2][2] = 1;
-	}
-
-	//-------------------------
-
-	if (!position[0][0]) {// 왼쪽 위이이이이이이ㅣㅣㅇ잉
-		int j = y - 2;
-		for (int i = x - 2; i > 0; i--) {
-			if (arr[i][j] == order) {
-				for (++i; i < x; i++) {
-					j++;
-					arr[i][j] = turn;
-				}
-				break;
-			}
-			if (j == 0) break;
-			j--;
-		}
-	}
-
-	if (!position[0][1]) { //위이이이이이ㅣ이ㅣ이ㅣ이잉
-		for (int i = y - 1; i >= 0; i--) {
-			if (arr[x][i] == order) {
-				for (++i; i < y; i++) {
-					arr[x][i] = turn;
-				}
-				break;
-			}
-		}
-	}
-
-	if (!position[0][2]) { // 위 오른쪼오오오오ㅗㄱ
-		int j = y - 2;
-		for (int i = x + 2; i <= 7; i++) {
-			if (arr[i][j] == order) {
-				for (++i; i > x; i--) {
-					j++;
-					arr[i][j] = turn;
-				}
-				break;
-			}
-			if (j == 0) break;
-			j--;
-		}
-	}
-
-	if (!position[1][0]) { // 왼쪼오오오ㅗ옥
-		for (int i = x - 2; i >= 0; i--) {
-			if (arr[i][y] == order) {
-				for (++i; i < x; i++) {
-					arr[i][y] = turn;
-				}
-				break;
-			}
-		}
-	}
-
-	if (!position[1][2]) { // 오른쪼오오오ㅗㅇ옥
-		for (int i = x + 2; i <= 7; i++) {
-			if (arr[i][y] == order) {
-				for (i; i > x; i--) {
-					arr[i][y] = turn;
-				}
-				break;
-			}
-		}
-	}
-
-	if (!position[2][0]) {}
-	if (!position[2][1]) {}
-	if (!position[2][2]) {}
-}
 
 // 착수 함수
 int start(int arr[8][8], int *turn, int cursor[]) {
 	if (arr[cursor[0]][cursor[1]] == 0) {
 		arr[cursor[0]][cursor[1]] = *turn;
-
-		if (*turn == 1) *turn = 2;
-		else *turn = 1;
+		*turn = *turn == 2 ? 1 : 2;
 	}
 	else return 1;
 	return 0;
 }
 
+// 커서 움직임
 void move(int cursor[], int key) {
 	switch (key) {
 	case RIGHT:
@@ -225,7 +83,7 @@ int main() {
 		view(arr, cursor, turn);
 		printf("%d\n\n", key);
 		if (warning) printf("여기에는 착수가 불가 합니다");
-		else if (!warning) printf("'q'를 누르면 종료됩니다.");
+		else if (!warning) printf("'q'를 누르면 종료됩니다.\n");
 
 		key = _getch();
 		if (key != SPACEBAR) move(cursor, key);
